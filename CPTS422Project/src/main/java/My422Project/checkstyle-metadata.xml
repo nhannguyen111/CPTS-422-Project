@@ -25,5 +25,10 @@
             <description>Num of Comments Check</description>
         </rule-metadata>
         
+        <rule-metadata name="Halstead Vocabulary Check" internal-name="HalsteadVocabulary" parent="TreeWalker">
+            <alternative-name internal-name="My422Project.HalsteadVocabularyCheck" />
+            <description>Num of Comments Check</description>
+        </rule-metadata>
+        
     </rule-group-metadata>
 </checkstyle-metadata>
