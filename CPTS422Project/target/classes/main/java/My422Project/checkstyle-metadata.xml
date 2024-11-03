@@ -45,5 +45,10 @@
             <description>Num Of Looping Statements Check</description>
         </rule-metadata>
         
+        <rule-metadata name="Halstead Difficulty Check" internal-name="HalsteadDifficulty" parent="TreeWalker">
+            <alternative-name internal-name="My422Project.HalsteadDifficultyCheck" />
+            <description>Halstead Difficulty Check</description>
+        </rule-metadata>
+        
     </rule-group-metadata>
 </checkstyle-metadata>
