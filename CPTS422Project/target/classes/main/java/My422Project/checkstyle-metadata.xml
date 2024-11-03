@@ -27,7 +27,12 @@
         
         <rule-metadata name="Halstead Vocabulary Check" internal-name="HalsteadVocabulary" parent="TreeWalker">
             <alternative-name internal-name="My422Project.HalsteadVocabularyCheck" />
-            <description>Num of Comments Check</description>
+            <description>Halstead Vocabulary Check</description>
+        </rule-metadata>
+        
+        <rule-metadata name="Num Of Lines Of Comments Check" internal-name="NumOfLinesOfComments" parent="TreeWalker">
+            <alternative-name internal-name="My422Project.NumOfLinesOfCommentsCheck" />
+            <description>Num Of Lines Of Comments Check</description>
         </rule-metadata>
         
     </rule-group-metadata>
