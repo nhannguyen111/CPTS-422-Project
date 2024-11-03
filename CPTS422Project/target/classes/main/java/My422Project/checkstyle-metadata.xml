@@ -50,5 +50,10 @@
             <description>Halstead Difficulty Check</description>
         </rule-metadata>
         
+        <rule-metadata name="Num Of Operators Check" internal-name="NumOfOperators" parent="TreeWalker">
+            <alternative-name internal-name="My422Project.NumOfOperatorsCheck" />
+            <description>Num Of Operators Check</description>
+        </rule-metadata>
+        
     </rule-group-metadata>
 </checkstyle-metadata>
