@@ -35,5 +35,10 @@
             <description>Num Of Lines Of Comments Check</description>
         </rule-metadata>
         
+        <rule-metadata name="Halstead Volume Check" internal-name="HalsteadVolume" parent="TreeWalker">
+            <alternative-name internal-name="My422Project.HalsteadVolumeCheck" />
+            <description>Halstead Volume Check</description>
+        </rule-metadata>
+        
     </rule-group-metadata>
 </checkstyle-metadata>
