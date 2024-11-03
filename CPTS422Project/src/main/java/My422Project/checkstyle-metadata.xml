@@ -40,5 +40,10 @@
             <description>Halstead Volume Check</description>
         </rule-metadata>
         
+        <rule-metadata name="Num Of Looping Statements Check" internal-name="NumOfLoopingStatements" parent="TreeWalker">
+            <alternative-name internal-name="My422Project.NumOfLoopingStatementsCheck" />
+            <description>Num Of Looping Statements Check</description>
+        </rule-metadata>
+        
     </rule-group-metadata>
 </checkstyle-metadata>
