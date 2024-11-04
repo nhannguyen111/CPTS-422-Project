@@ -65,5 +65,15 @@
             <description>Num Of Operands Check</description>
         </rule-metadata>
         
+        <rule-metadata name="Num Of Expressions Check" internal-name="NumOfExpressions" parent="TreeWalker">
+            <alternative-name internal-name="My422Project.NumOfExpressionsCheck" />
+            <description>Num Of Expressions Check</description>
+        </rule-metadata>
+        
+        <rule-metadata name="Num Of Variable Declarations Check" internal-name="NumOfVariableDeclarations" parent="TreeWalker">
+            <alternative-name internal-name="My422Project.NumOfVariableDeclarationsCheck" />
+            <description>Num Of Variable Declarations Check</description>
+        </rule-metadata>
+        
     </rule-group-metadata>
 </checkstyle-metadata>
