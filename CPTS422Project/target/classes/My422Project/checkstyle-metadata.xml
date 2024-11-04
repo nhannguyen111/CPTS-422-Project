@@ -80,5 +80,10 @@
             <description>Num Of External Method References Check</description>
         </rule-metadata>
         
+        <rule-metadata name="Num Of Local Method References Check" internal-name="NumOfLocalMethodReferences" parent="TreeWalker">
+            <alternative-name internal-name="My422Project.NumOfLocalMethodReferencesCheck" />
+            <description>Num Of Local Method References Check</description>
+        </rule-metadata>
+        
     </rule-group-metadata>
 </checkstyle-metadata>
