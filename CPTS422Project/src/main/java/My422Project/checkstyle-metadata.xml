@@ -75,5 +75,10 @@
             <description>Num Of Variable Declarations Check</description>
         </rule-metadata>
         
+        <rule-metadata name="Num Of External Method References Check" internal-name="NumOfExternalMethodReferences" parent="TreeWalker">
+            <alternative-name internal-name="My422Project.NumOfExternalMethodReferencesCheck" />
+            <description>Num Of External Method References Check</description>
+        </rule-metadata>
+        
     </rule-group-metadata>
 </checkstyle-metadata>
