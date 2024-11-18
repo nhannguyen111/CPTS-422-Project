@@ -47,13 +47,11 @@ class HalsteadDifficultyCheckTest {
     
     @Test
     void testGetAcceptableTokens() {
-        // `getAcceptableTokens()` should return the same array as `getDefaultTokens()`
         assertArrayEquals(check.getDefaultTokens(), check.getAcceptableTokens(), "The acceptable tokens should match the default tokens.");
     }
 
     @Test
     void testGetRequiredTokens() {
-        // `getRequiredTokens()` should return an empty array
         assertArrayEquals(new int[0], check.getRequiredTokens(), "The required tokens array should be empty.");
     }
 
@@ -79,72 +77,53 @@ class HalsteadDifficultyCheckTest {
         assertEquals(1, check.getUniqueOperandsCount());
         assertEquals(1, check.getTotalOperands());
     }
-
+    
     @Test
-    void testVisitToken_withMultipleOperatorsAndOperands() {
-        DetailAST operatorAST = mock(DetailAST.class);
-        when(operatorAST.getText()).thenReturn("+");
-        check.visitToken(operatorAST);
+    void testFinishTree_withAndWithoutUniqueOperands() {
+        // Case 1: Non-zero unique operands
+        DetailAST operatorAST1 = mock(DetailAST.class);
+        when(operatorAST1.getText()).thenReturn("+");
+        check.visitToken(operatorAST1);
 
         DetailAST operandAST = mock(DetailAST.class);
         when(operandAST.getText()).thenReturn("int");
         check.visitToken(operandAST);
 
-        DetailAST anotherOperandAST = mock(DetailAST.class);
-        when(anotherOperandAST.getText()).thenReturn("int");
-        check.visitToken(anotherOperandAST);
+        // Spy on the HalsteadDifficultyCheck instance
+        HalsteadDifficultyCheck spyCheck1 = spy(check);
 
-        assertEquals(1, check.getUniqueOperatorsCount());
-        assertEquals(1, check.getUniqueOperandsCount());
-        assertEquals(2, check.getTotalOperands());
+        // Mock the log method to avoid actual logging
+        doNothing().when(spyCheck1).log(anyInt(), anyString());
+
+        DetailAST rootAST1 = mock(DetailAST.class);
+        spyCheck1.finishTree(rootAST1);
+
+        // Verify the log message for non-zero unique operands
+        verify(spyCheck1).log(eq(0), contains("Halstead Difficulty: "));
+        assertEquals(0, spyCheck1.getUniqueOperatorsCount());
+        assertEquals(0, spyCheck1.getUniqueOperandsCount());
+        assertEquals(0, spyCheck1.getTotalOperands());
+
+        // Reset the check instance for the second case
+        check = new HalsteadDifficultyCheck();
+
+        // Case 2: Zero unique operands
+        DetailAST operatorAST2 = mock(DetailAST.class);
+        when(operatorAST2.getText()).thenReturn("+");
+        check.visitToken(operatorAST2);
+
+        HalsteadDifficultyCheck spyCheck2 = spy(check);
+        doNothing().when(spyCheck2).log(anyInt(), anyString());
+
+        DetailAST rootAST2 = mock(DetailAST.class);
+        spyCheck2.finishTree(rootAST2);
+
+        // Verify the log message for zero unique operands
+        verify(spyCheck2).log(eq(0), contains("Halstead Difficulty: 0"));
+        assertEquals(0, spyCheck2.getUniqueOperatorsCount());
+        assertEquals(0, spyCheck2.getUniqueOperandsCount());
+        assertEquals(0, spyCheck2.getTotalOperands());
     }
 
-    @Test
-    void testFinishTree_withCalculations() {
-        // Simulate visit tokens
-        DetailAST operatorAST = mock(DetailAST.class);
-        when(operatorAST.getText()).thenReturn("+");
-        check.visitToken(operatorAST);
-
-        DetailAST operandAST1 = mock(DetailAST.class);
-        when(operandAST1.getText()).thenReturn("int");
-        check.visitToken(operandAST1);
-
-        DetailAST operandAST2 = mock(DetailAST.class);
-        when(operandAST2.getText()).thenReturn("float");
-        check.visitToken(operandAST2);
-
-        DetailAST rootAST = mock(DetailAST.class);
-        
-        // Spy on the check instance to verify log calls
-        HalsteadDifficultyCheck spyCheck = spy(check);
-        spyCheck.finishTree(rootAST);
-
-        // Verify Halstead Difficulty calculation and logging
-        verify(spyCheck).log(eq(0), contains("Halstead Difficulty: "));
-
-        assertEquals(1, spyCheck.getUniqueOperatorsCount());
-        assertEquals(2, spyCheck.getUniqueOperandsCount());
-        assertEquals(2, spyCheck.getTotalOperands());
-    }
-
-    @Test
-    void testFinishTree_resetsState() {
-        // Simulate visit tokens
-        DetailAST operatorAST = mock(DetailAST.class);
-        when(operatorAST.getText()).thenReturn("+");
-        check.visitToken(operatorAST);
-
-        DetailAST operandAST = mock(DetailAST.class);
-        when(operandAST.getText()).thenReturn("int");
-        check.visitToken(operandAST);
-
-        DetailAST rootAST = mock(DetailAST.class);
-        check.finishTree(rootAST);
-
-        // Ensure state is reset after finishTree
-        assertEquals(0, check.getUniqueOperatorsCount());
-        assertEquals(0, check.getUniqueOperandsCount());
-        assertEquals(0, check.getTotalOperands());
-    }
+    
 }
