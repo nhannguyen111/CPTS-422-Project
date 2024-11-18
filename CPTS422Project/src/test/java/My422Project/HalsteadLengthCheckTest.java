@@ -15,7 +15,7 @@ public class HalsteadLengthCheckTest {
     // Sets up a new instance of HalsteadLengthCheck before each test
     @BeforeEach
     void setUp() {
-        halsteadLengthCheck = new HalsteadLengthCheck();
+        halsteadLengthCheck = spy(new HalsteadLengthCheck()); // Spy on the instance
     }
 
     // Tests that getDefaultTokens returns the expected array of default token types
@@ -77,20 +77,27 @@ public class HalsteadLengthCheckTest {
         assertEquals(1, halsteadLengthCheck.getNumOperands());
     }
 
-    // Tests that finishTree logs the Halstead Length, resets counts, and logs the message as expected
     @Test
     void testFinishTree_resetsCountsAndLogsLength() {
+        // Create a mock DetailAST
         DetailAST rootAST = mock(DetailAST.class);
         when(rootAST.getLineNo()).thenReturn(1);
 
+        // Set initial values for operators and operands
         halsteadLengthCheck.setNumOperators(3);
         halsteadLengthCheck.setNumOperands(2);
 
+        // Stub the log method to do nothing
+        doNothing().when(halsteadLengthCheck).log(anyInt(), anyString());
+
+        // Call finishTree
         halsteadLengthCheck.finishTree(rootAST);
 
+        // Verify the log method is called with the expected message
         int expectedHalsteadLength = 5; // 3 operators + 2 operands
         verify(halsteadLengthCheck).log(1, "Halstead Length: " + expectedHalsteadLength + " NN");
 
+        // Verify the counters are reset
         assertEquals(0, halsteadLengthCheck.getNumOperators());
         assertEquals(0, halsteadLengthCheck.getNumOperands());
     }
