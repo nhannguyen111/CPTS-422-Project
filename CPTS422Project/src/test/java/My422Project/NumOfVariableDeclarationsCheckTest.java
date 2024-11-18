@@ -71,7 +71,7 @@ class NumOfVariableDeclarationsCheckTest {
 
         assertEquals(2, check.getTotalVariableDeclarations(), "The total variable declaration count should be 2 after visiting VARIABLE_DEF and PARAMETER_DEF tokens.");
     }
-
+    
     @Test
     void testFinishTree_logsAndResetsTotalVariableDeclarations() {
         // Simulate visiting tokens
@@ -83,8 +83,13 @@ class NumOfVariableDeclarationsCheckTest {
         when(parameterDefAST.getType()).thenReturn(TokenTypes.PARAMETER_DEF);
         check.visitToken(parameterDefAST);
 
-        // Spy on the check instance to verify log calls
+        // Spy on the check instance
         NumOfVariableDeclarationsCheck spyCheck = spy(check);
+
+        // Stub the log method to do nothing
+        doNothing().when(spyCheck).log(anyInt(), anyString());
+
+        // Call finishTree and verify behavior
         spyCheck.finishTree(null);
 
         // Verify that `log` was called with the expected message
