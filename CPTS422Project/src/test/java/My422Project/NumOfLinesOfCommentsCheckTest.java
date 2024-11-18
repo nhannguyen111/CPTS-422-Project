@@ -21,7 +21,7 @@ class NumOfLinesOfCommentsCheckTest {
 
     @BeforeEach
     void setUp() {
-        check = new NumOfLinesOfCommentsCheck();
+    	check = Mockito.spy(new NumOfLinesOfCommentsCheck());
 
         // Mock DetailAST for single line comment
         singleLineCommentAst = mock(DetailAST.class);
@@ -77,19 +77,24 @@ class NumOfLinesOfCommentsCheckTest {
         check.beginTree(null); // Simulate beginning a new file
         assertEquals(0, check.getCommentLinesCount(), "Comment line count should reset to 0 at the beginning of a new tree");
     }
-
+    
     @Test
-    void testFinishTreeUpdatesCommentCount() {
-        // Simulate comment line count
-        check.visitToken(createSingleLineCommentMock());
+    void testFinishTree() {
+        // Mock the log method to do nothing
+        doNothing().when(check).log(anyInt(), anyString());
+
+        // Simulate counting comments
         check.visitToken(createSingleLineCommentMock());
         check.visitToken(createBlockCommentMock(1, 3)); // 3 lines in block comment
 
-        // Call finishTree, which should log the final count of comment lines
+        // Call finishTree
         check.finishTree(null);
 
-        // Verify that the comment line count is as expected
-        assertEquals(5, check.getCommentLinesCount(), "Comment line count should be 5");
+        // Verify the log method was called with the expected message
+        verify(check).log(0, "Number of lines of comments: 4");
+
+        // Ensure the count is as expected
+        assertEquals(4, check.getCommentLinesCount(), "Comment line count should be 4");
     }
 
     // Helper method to create a mock for a single line comment AST
