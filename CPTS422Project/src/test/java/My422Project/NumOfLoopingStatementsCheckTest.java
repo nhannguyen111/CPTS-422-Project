@@ -15,7 +15,7 @@ public class NumOfLoopingStatementsCheckTest {
 
     @BeforeEach
     public void setUp() {
-        check = new NumOfLoopingStatementsCheck();
+    	check = spy(new NumOfLoopingStatementsCheck());
     }
 
     @Test
@@ -49,9 +49,9 @@ public class NumOfLoopingStatementsCheckTest {
 
         assertEquals(2, check.getLoopCount(), "Loop count should be 2 after two visits to loop tokens");
     }
-
+    
     @Test
-    public void testFinishTreeResetsLoopCount() {
+    public void testFinishTree() {
         // Simulate visiting some loop tokens
         check.visitToken(createMockAST(TokenTypes.LITERAL_FOR));
         check.visitToken(createMockAST(TokenTypes.LITERAL_WHILE));
@@ -59,8 +59,14 @@ public class NumOfLoopingStatementsCheckTest {
         // Confirm loop count before finishing
         assertEquals(2, check.getLoopCount(), "Loop count should be 2 before calling finishTree");
 
-        // Call finishTree and verify reset
+        // Stub the log method
+        doNothing().when(check).log(anyInt(), anyString());
+
+        // Call finishTree and verify log invocation
         check.finishTree(null);
+        verify(check).log(0, "Number of looping statements: 2");
+
+        // Verify reset of loop count
         assertEquals(0, check.getLoopCount(), "Loop count should be reset to 0 after finishTree");
     }
 
