@@ -125,17 +125,19 @@ class NumOfExternalMethodReferencesCheckTest {
         // Verify that the external method reference count did not increase
         assertEquals(0, check.getExternalMethodReferences(), "The total external method reference count should remain 0 for internal calls without qualification.");
     }
-
-
+    
     @Test
-    void testFinishTree_logsAndResetsExternalMethodReferences() {
+    void testFinishTree() {
+        // Spy on the check instance
+        NumOfExternalMethodReferencesCheck spyCheck = spy(check);
+
         // Simulate visiting an external method reference
         DetailAST classDefAST = mock(DetailAST.class);
         when(classDefAST.getType()).thenReturn(TokenTypes.CLASS_DEF);
         DetailAST identAST = mock(DetailAST.class);
         when(identAST.getText()).thenReturn("TestClass");
         when(classDefAST.findFirstToken(TokenTypes.IDENT)).thenReturn(identAST);
-        check.visitToken(classDefAST);
+        spyCheck.visitToken(classDefAST);
 
         DetailAST methodCallAST = mock(DetailAST.class);
         when(methodCallAST.getType()).thenReturn(TokenTypes.METHOD_CALL);
@@ -147,10 +149,12 @@ class NumOfExternalMethodReferencesCheckTest {
         when(dotAST.findFirstToken(TokenTypes.IDENT)).thenReturn(otherClassAST);
         when(otherClassAST.getText()).thenReturn("OtherClass");
 
-        check.visitToken(methodCallAST);
+        spyCheck.visitToken(methodCallAST);
 
-        // Spy on the check instance to verify log calls
-        NumOfExternalMethodReferencesCheck spyCheck = spy(check);
+        // Use Mockito to mock the `log` method to do nothing
+        doNothing().when(spyCheck).log(anyInt(), anyString());
+
+        // Call finishTree
         spyCheck.finishTree(null);
 
         // Verify that `log` was called with the expected message
