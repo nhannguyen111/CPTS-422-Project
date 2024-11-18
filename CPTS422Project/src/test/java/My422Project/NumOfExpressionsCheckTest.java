@@ -85,7 +85,7 @@ class NumOfExpressionsCheckTest {
 
         assertEquals(3, check.getTotalExpressions(), "The total expression count should be 3 after visiting three expression tokens.");
     }
-
+    
     @Test
     void testFinishTree_logsAndResetsTotalExpressions() {
         // Simulate visiting tokens
@@ -99,6 +99,10 @@ class NumOfExpressionsCheckTest {
 
         // Spy on the check instance to verify log calls
         NumOfExpressionsCheck spyCheck = spy(check);
+
+        // Use doNothing to avoid actual logging
+        doNothing().when(spyCheck).log(anyInt(), anyString());
+
         spyCheck.finishTree(null);
 
         // Verify that `log` was called with the expected message
