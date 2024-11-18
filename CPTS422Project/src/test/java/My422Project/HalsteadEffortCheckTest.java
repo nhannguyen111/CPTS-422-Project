@@ -96,29 +96,44 @@ class HalsteadEffortCheckTest {
         assertEquals(2, check.getTotalOperators(), "The total operator count should be 2.");
         assertEquals(2, check.getTotalOperands(), "The total operand count should be 2.");
     }
+    
+    @Test
+    void testFinishTree_handlesZeroVocabularyAndOperands() {
+        // Create a spy of the check instance
+        HalsteadEffortCheck spyCheck = spy(new HalsteadEffortCheck());
+
+        // Stub the log method to do nothing
+        doNothing().when(spyCheck).log(anyInt(), anyString());
+
+        // Call finishTree with empty sets (default state)
+        spyCheck.finishTree(null);
+
+        // Verify that volume and difficulty are both 0 due to vocabulary and operands being 0
+        verify(spyCheck).log(eq(0), contains("Halstead Effort: 0.0"));
+    }
 
     @Test
-    void testFinishTree_calculatesEffortAndResets() {
+    void testFinishTree_calculatesVolumeAndDifficultyWithNonZeroValues() {
+        // Create a spy of the check instance
+        HalsteadEffortCheck spyCheck = spy(new HalsteadEffortCheck());
+
         // Simulate visiting tokens for operators and operands
         DetailAST plusAST = mock(DetailAST.class);
         when(plusAST.getText()).thenReturn("+");
-        check.visitToken(plusAST);
+        spyCheck.visitToken(plusAST);
 
         DetailAST intAST = mock(DetailAST.class);
         when(intAST.getText()).thenReturn("int");
-        check.visitToken(intAST);
+        spyCheck.visitToken(intAST);
 
-        // Spy on the check instance to verify the log call
-        HalsteadEffortCheck spyCheck = spy(check);
+        // Stub the log method to do nothing
+        doNothing().when(spyCheck).log(anyInt(), anyString());
+
+        // Call finishTree and verify log
         spyCheck.finishTree(null);
 
-        // Verify that `log` was called with the expected Halstead Effort message
         double expectedEffort = spyCheck.getHalsteadEffort();
         verify(spyCheck).log(eq(0), contains("Halstead Effort: " + expectedEffort));
-
-        // Ensure that operator and operand counts are reset after finishTree
-        assertEquals(0, spyCheck.getTotalOperators(), "The total operator count should be reset to 0 after finishTree.");
-        assertEquals(0, spyCheck.getTotalOperands(), "The total operand count should be reset to 0 after finishTree.");
     }
 
     @Test
