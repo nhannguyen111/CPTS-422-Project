@@ -78,9 +78,9 @@ class NumOfOperandsCheckTest {
 
         assertEquals(3, check.getTotalOperands(), "The total operand count should be 3 after visiting three operand tokens.");
     }
-
+    
     @Test
-    void testFinishTree_logsAndResetsTotalOperands() {
+    void testFinishTree() {
         // Simulate visiting tokens
         DetailAST intAST = mock(DetailAST.class);
         when(intAST.getText()).thenReturn("int");
@@ -92,6 +92,9 @@ class NumOfOperandsCheckTest {
 
         // Spy on the check instance to verify log calls
         NumOfOperandsCheck spyCheck = spy(check);
+        doNothing().when(spyCheck).log(anyInt(), anyString());
+
+        // Call finishTree
         spyCheck.finishTree(null);
 
         // Verify that `log` was called with the expected message
