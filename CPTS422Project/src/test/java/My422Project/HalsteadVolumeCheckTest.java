@@ -80,26 +80,33 @@ public class HalsteadVolumeCheckTest {
         assert halsteadVolumeCheck.getVocabularySize() == 1;
         assert halsteadVolumeCheck.getProgramLength() == 1;
     }
-
+    
     @Test
     public void testFinishTree() {
-        DetailAST mockAST = mock(DetailAST.class);
+        // Create a spy of HalsteadVolumeCheck
         halsteadVolumeCheck = Mockito.spy(new HalsteadVolumeCheck());
 
+        // Mock the log method
+        doNothing().when(halsteadVolumeCheck).log(anyInt(), anyString());
+
         // Simulate tokens
-        when(mockAST.getText()).thenReturn("+", "-", "int", "int");
+        DetailAST mockAST1 = mock(DetailAST.class);
+        DetailAST mockAST2 = mock(DetailAST.class);
+        when(mockAST1.getText()).thenReturn("+");
+        when(mockAST2.getText()).thenReturn("int");
 
         // Simulate visits to tokens
-        halsteadVolumeCheck.visitToken(mockAST);
-        halsteadVolumeCheck.visitToken(mockAST);
-        halsteadVolumeCheck.visitToken(mockAST);
-        halsteadVolumeCheck.visitToken(mockAST);
+        halsteadVolumeCheck.visitToken(mockAST1);
+        halsteadVolumeCheck.visitToken(mockAST2);
+        halsteadVolumeCheck.visitToken(mockAST2);
 
-        halsteadVolumeCheck.finishTree(mockAST);
+        // Call finishTree
+        halsteadVolumeCheck.finishTree(mockAST1);
 
+        // Verify that log was called with the expected message
         verify(halsteadVolumeCheck).log(eq(0), contains("Halstead Volume: "));
 
-        // Check for reset after finishTree
+        // Assert the internal state was reset
         assert halsteadVolumeCheck.getProgramLength() == 0;
         assert halsteadVolumeCheck.getVocabularySize() == 0;
     }

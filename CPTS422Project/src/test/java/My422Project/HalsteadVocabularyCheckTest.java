@@ -81,13 +81,6 @@ class HalsteadVocabularyCheckTest {
         // Mock DetailAST to pass the line number to log method
         DetailAST rootAST = mock(DetailAST.class);
         when(rootAST.getLineNo()).thenReturn(1);
-
-        // Spy on the check instance to verify logging
-        //HalsteadVocabularyCheck spyCheck = Mockito.spy(check);
-        //spyCheck.finishTree(rootAST);
-
-        // Halstead Vocabulary is sum of unique operators and operands (2 + 2)
-        //verify(spyCheck).log(1, "Halstead Vocabulary: " + 4);
     }
 
     @Test
