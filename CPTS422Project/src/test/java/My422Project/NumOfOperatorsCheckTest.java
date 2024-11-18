@@ -80,7 +80,7 @@ class NumOfOperatorsCheckTest {
 
         assertEquals(2, check.getTotalOperators(), "The total operator count should be 2 after visiting two operator tokens.");
     }
-
+    
     @Test
     void testFinishTree_logsAndResetsTotalOperators() {
         DetailAST plusAST = mock(DetailAST.class);
@@ -89,10 +89,15 @@ class NumOfOperatorsCheckTest {
 
         // Spy on the check instance to verify log calls
         NumOfOperatorsCheck spyCheck = spy(check);
+
+        // Mock the log method to do nothing
+        doNothing().when(spyCheck).log(anyInt(), anyString());
+
+        // Call finishTree on the spy instance
         spyCheck.finishTree(null);
 
         // Verify that `log` was called with the expected message
-        verify(spyCheck).log(eq(0), contains("Total number of operators: 1"));
+        verify(spyCheck).log(eq(0), eq("Total number of operators: 1"));
 
         // Ensure that totalOperators was reset
         assertEquals(0, spyCheck.getTotalOperators(), "The total operator count should be reset to 0 after finishTree.");
