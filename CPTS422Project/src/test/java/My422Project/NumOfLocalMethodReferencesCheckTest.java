@@ -141,7 +141,8 @@ class NumOfLocalMethodReferencesCheckTest {
     }
 
     @Test
-    void testFinishTree_logsAndResetsLocalMethodReferences() {
+    void testFinishTree() {
+        // Simulate visiting tokens
         DetailAST classDefAST = mock(DetailAST.class);
         when(classDefAST.getType()).thenReturn(TokenTypes.CLASS_DEF);
         DetailAST identAST = mock(DetailAST.class);
@@ -152,14 +153,17 @@ class NumOfLocalMethodReferencesCheckTest {
         DetailAST methodCallAST = mock(DetailAST.class);
         when(methodCallAST.getType()).thenReturn(TokenTypes.METHOD_CALL);
         when(methodCallAST.findFirstToken(TokenTypes.DOT)).thenReturn(null);
-
         check.visitToken(methodCallAST);
 
+        // Create a spy and call finishTree
         NumOfLocalMethodReferencesCheck spyCheck = spy(check);
+        doNothing().when(spyCheck).log(anyInt(), anyString());
         spyCheck.finishTree(null);
 
+        // Verify that log was called with expected arguments
         verify(spyCheck).log(eq(0), contains("Total number of local method references: 1"));
 
+        // Ensure state is reset
         assertEquals(0, spyCheck.getLocalMethodReferences(), "The total local method reference count should be reset to 0 after finishTree.");
         assertEquals("", spyCheck.getCurrentClassName(), "The current class name should be reset to an empty string after finishTree.");
     }
