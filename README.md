@@ -1,13 +1,15 @@
-# CPTS-422-Project
+Overall, there are four folders with numerous files, which likely contain numerous methods and lines of code. For each metric, there are checks code, JUnit whitebox testing code, black box tests, and black box test cases. There is way too much content to provide proper explanations, but generally there are custom implementations of JUnit and its associated tests. The main program defines a class that analyzes source code to calculate certain metrics based on patterns it detects in the code, such as specific types of tokens or symbols. It processes a file by scanning through its structure, identifying key elements like operations or values, and keeps track of their occurrences. At the end of the file, it performs calculations using these counts and logs the results. After finishing, it resets the data to prepare for analyzing the next file.The tests ensure the program behaves correctly and handles various scenarios. They check that the program identifies and counts the elements it is supposed to, performs the calculations accurately, and behaves as expected in both typical and unusual cases. The tests are written to validate the program’s logic, including edge cases and potential errors.
 
-HalsteadLengthCheck:
-- Halstead Operators are actions that can be done to entities.
-- Halstead Operands are entities that can be acted on by Operators
+The whitebox portion of this project is definitely the stronger part. As my pit mutation results will prove this. The black box portion is very much a struggle, as things get more complicated, especially with many more added files. Black box coverage is nonexistent, but I hope the efforts were not discounted. To get mutation results to appear, I must provide passing results for black box tests, so the JUnit tests will be misleading.
 
-- Examples of operators are any mathmatical operation such as addition and multiplication. They can also be logical operations (such as greater than / less than), and they can be assignment operators (=, -=, +=).
-- Examples of operands are pretty much any numbers, variables, or even booleans.
+The metrics have been expanded, specifically halstead operators/operands:
 
-NumOfCommentsCheck:
-- This function basically identifies comments and counts them
-- We identify comments simply by using TokenTypes.SINGLE_LINE_COMMENT, and TokenTypes.BLOCK_COMMENT_BEGIN
-- We do not need TokenTypes.BLOCK_COMMENT_END the beginning is enough to identify them, and to prevent counting block comments twice, it is not included.
+Halstead Operators:
++ (PLUS), - (MINUS), * (STAR), / (DIV), = (ASSIGN), > (GT), < (LT), & (BAND), | (BOR), == (EQUAL), != (NOT_EQUAL), ( (LPAREN), ) (RPAREN), , (COMMA), ; (SEMI), <= (LE), >= (GE), ++ (INC), -- (DEC), { (LCURLY), } (RCURLY)
+
+Halstead Operands:
+if, for, return, int, "string", boolean, ident (identifiers such as variable names), 123 (numeric constants), ]
+
+Halstead operators like +, -, *, and / are clear with numbers but can change meaning, like + for string concatenation. Logical operators (&, |) may represent comparisons or bitwise operations. Even structural elements like { and } are counted as operators, though they don't perform computations. Similarly, = might be mistaken for ==, and ++/-- behave differently in prefix versus postfix forms.
+Identifiers (ident) can be used for declarations or later references, and numeric constants (123) might be counted multiple times even if the value repeats. Keywords like if, for, and return are considered operands, though they primarily control program flow rather than interact with operators.
+	External method references are calls to functions in another class, identified by referencing a different class or object (e.g., OtherClass.method() or instance.method()). Internal method references are calls to functions within the same class, either directly or using this. These definitions are clear-cut and inherently correct, reflecting their straightforward roles in object-oriented programming.
