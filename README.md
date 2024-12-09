@@ -10,6 +10,8 @@ Halstead Operators:
 Halstead Operands:
 if, for, return, int, "string", boolean, ident (identifiers such as variable names), 123 (numeric constants), ]
 
+*Fault Models for Halstead Metrics*
+
 1. Operators
 
 1.1 Count pairing operators such as (), {}, and [] as two distinct operators.
