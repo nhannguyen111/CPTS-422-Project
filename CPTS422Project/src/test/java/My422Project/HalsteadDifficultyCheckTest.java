@@ -23,25 +23,18 @@ class HalsteadDifficultyCheckTest {
     void testGetDefaultTokens() {
         HalsteadDifficultyCheck check = new HalsteadDifficultyCheck();
         
-        int[] expectedTokens = new int[] {
-            TokenTypes.PLUS,
-            TokenTypes.MINUS,
-            TokenTypes.STAR,
-            TokenTypes.DIV,
-            TokenTypes.ASSIGN,
-            TokenTypes.GT,
-            TokenTypes.LT,
-            TokenTypes.BAND,
-            TokenTypes.BOR,
-            TokenTypes.EQUAL,
-            TokenTypes.NOT_EQUAL,
-            TokenTypes.LITERAL_INT,
-            TokenTypes.STRING_LITERAL,
-            TokenTypes.LITERAL_BOOLEAN,
-            TokenTypes.IDENT,
-            TokenTypes.NUM_INT
+        int[] expectedTokens = {
+                TokenTypes.PLUS, TokenTypes.MINUS, TokenTypes.STAR, TokenTypes.DIV,
+                TokenTypes.ASSIGN, TokenTypes.GT, TokenTypes.LT, TokenTypes.BAND,
+                TokenTypes.BOR, TokenTypes.EQUAL, TokenTypes.NOT_EQUAL,
+                TokenTypes.LPAREN, TokenTypes.RPAREN, TokenTypes.COMMA,
+                TokenTypes.RBRACK, TokenTypes.LITERAL_IF, TokenTypes.SEMI,
+                TokenTypes.LITERAL_FOR, TokenTypes.LE, TokenTypes.GE,
+                TokenTypes.INC, TokenTypes.DEC, TokenTypes.LITERAL_RETURN,
+                TokenTypes.LCURLY, TokenTypes.RCURLY, TokenTypes.LITERAL_INT,
+                TokenTypes.STRING_LITERAL, TokenTypes.LITERAL_BOOLEAN,
+                TokenTypes.IDENT, TokenTypes.NUM_INT
         };
-        
         assertArrayEquals(expectedTokens, check.getDefaultTokens(), "The default tokens do not match the expected values.");
     }
     

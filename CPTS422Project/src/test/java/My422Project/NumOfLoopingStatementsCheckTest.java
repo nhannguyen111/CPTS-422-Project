@@ -25,12 +25,12 @@ public class NumOfLoopingStatementsCheckTest {
             TokenTypes.LITERAL_WHILE,
             TokenTypes.LITERAL_DO
         };
-        assertEquals(expectedTokens, check.getDefaultTokens());
+        assertArrayEquals(expectedTokens, check.getDefaultTokens());
     }
 
     @Test
     public void testGetAcceptableTokens() {
-        assertEquals(check.getDefaultTokens(), check.getAcceptableTokens());
+    	assertArrayEquals(check.getDefaultTokens(), check.getAcceptableTokens());
     }
     
     @Test

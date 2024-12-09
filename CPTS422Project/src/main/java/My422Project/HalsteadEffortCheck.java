@@ -14,52 +14,62 @@ public class HalsteadEffortCheck extends AbstractCheck {
     private int totalOperators = 0;
     private int totalOperands = 0;
 
+    private static final String[] OPERATORS = {
+            "+", "-", "*", "/", "=", ">", "<", "&&", "||", "==", "!=", 
+            "(", ")", ",", "[", "]", "if", ";", "for", "<=", ">=", "++", "--", "return", "{", "}"
+    };
+
+    private static final String[] OPERANDS = {
+            "int", "float", "double", "String", "boolean", "null"
+    };
+    
     // Define operator and operand tokens as specified
-    private static final Set<String> OPERATORS = new HashSet<>();
-    private static final Set<String> OPERANDS = new HashSet<>();
-
+    private static final Set<String> OPERATORS_SET = new HashSet<>();
+    private static final Set<String> OPERANDS_SET = new HashSet<>();
+    
     static {
-        // Define common operators
-        OPERATORS.add("+");
-        OPERATORS.add("-");
-        OPERATORS.add("*");
-        OPERATORS.add("/");
-        OPERATORS.add("=");
-        OPERATORS.add(">");
-        OPERATORS.add("<");
-        OPERATORS.add("&&");
-        OPERATORS.add("||");
-        OPERATORS.add("==");
-        OPERATORS.add("!=");
-
-        // Define common operands (keywords, literals)
-        OPERANDS.add("int");
-        OPERANDS.add("float");
-        OPERANDS.add("double");
-        OPERANDS.add("String");
-        OPERANDS.add("boolean");
-        OPERANDS.add("null");
+        for (String operator : OPERATORS) {
+            OPERATORS_SET.add(operator);
+        }
+        for (String operand : OPERANDS) {
+            OPERANDS_SET.add(operand);
+        }
     }
 
     @Override
     public int[] getDefaultTokens() {
         return new int[]{
-            TokenTypes.PLUS,
-            TokenTypes.MINUS,
-            TokenTypes.STAR,
-            TokenTypes.DIV,
-            TokenTypes.ASSIGN,
-            TokenTypes.GT,
-            TokenTypes.LT,
-            TokenTypes.BAND,
-            TokenTypes.BOR,
-            TokenTypes.EQUAL,
-            TokenTypes.NOT_EQUAL,
-            TokenTypes.LITERAL_INT,
-            TokenTypes.STRING_LITERAL,
-            TokenTypes.LITERAL_BOOLEAN,
-            TokenTypes.IDENT,
-            TokenTypes.NUM_INT
+                TokenTypes.PLUS,
+                TokenTypes.MINUS,
+                TokenTypes.STAR,
+                TokenTypes.DIV,
+                TokenTypes.ASSIGN,
+                TokenTypes.GT,
+                TokenTypes.LT,
+                TokenTypes.BAND,
+                TokenTypes.BOR,
+                TokenTypes.EQUAL,
+                TokenTypes.NOT_EQUAL,
+                TokenTypes.LPAREN,
+                TokenTypes.RPAREN,
+                TokenTypes.COMMA,
+                // TokenTypes.LBRACK,		// Left Bracket doesn't exist apparently..
+                TokenTypes.RBRACK,
+                TokenTypes.LITERAL_IF,
+                TokenTypes.SEMI,
+                TokenTypes.LITERAL_FOR,
+                TokenTypes.LE,
+                TokenTypes.GE,
+                TokenTypes.INC,
+                TokenTypes.DEC,
+                TokenTypes.LITERAL_RETURN,
+                TokenTypes.LCURLY,
+                TokenTypes.RCURLY,
+                TokenTypes.LITERAL_INT,
+                TokenTypes.STRING_LITERAL,
+                TokenTypes.LITERAL_BOOLEAN,
+                TokenTypes.IDENT,
+                TokenTypes.NUM_INT
         };
     }
 
@@ -78,10 +88,10 @@ public class HalsteadEffortCheck extends AbstractCheck {
         String tokenText = ast.getText();
 
         // Check if the token is an operator or operand
-        if (OPERATORS.contains(tokenText)) {
+        if (OPERATORS_SET.contains(tokenText)) {
             uniqueOperators.add(tokenText);
             totalOperators++;
-        } else if (OPERANDS.contains(tokenText)) {
+        } else if (OPERANDS_SET.contains(tokenText)) {
             getUniqueOperands().add(tokenText);
             totalOperands++;
         }

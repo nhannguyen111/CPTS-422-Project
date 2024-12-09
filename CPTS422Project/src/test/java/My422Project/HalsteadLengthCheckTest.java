@@ -21,15 +21,23 @@ public class HalsteadLengthCheckTest {
     // Tests that getDefaultTokens returns the expected array of default token types
     @Test
     void testDefaultTokens() {
-        int[] expectedTokens = {
+    	int[] expectedTokens = {
                 TokenTypes.PLUS, TokenTypes.MINUS, TokenTypes.STAR, TokenTypes.DIV,
                 TokenTypes.ASSIGN, TokenTypes.GT, TokenTypes.LT, TokenTypes.BAND,
-                TokenTypes.BOR, TokenTypes.EQUAL, TokenTypes.NOT_EQUAL, TokenTypes.LITERAL_INT,
-                TokenTypes.STRING_LITERAL, TokenTypes.LITERAL_BOOLEAN, TokenTypes.IDENT, TokenTypes.NUM_INT
+                TokenTypes.BOR, TokenTypes.EQUAL, TokenTypes.NOT_EQUAL,
+                TokenTypes.LPAREN, TokenTypes.RPAREN, TokenTypes.COMMA,
+                TokenTypes.RBRACK, TokenTypes.LITERAL_IF, TokenTypes.SEMI,
+                TokenTypes.LITERAL_FOR, TokenTypes.LE, TokenTypes.GE,
+                TokenTypes.INC, TokenTypes.DEC, TokenTypes.LITERAL_RETURN,
+                TokenTypes.LCURLY, TokenTypes.RCURLY, TokenTypes.LITERAL_INT,
+                TokenTypes.STRING_LITERAL, TokenTypes.LITERAL_BOOLEAN,
+                TokenTypes.IDENT, TokenTypes.NUM_INT
         };
-        assertEquals(expectedTokens.length, halsteadLengthCheck.getDefaultTokens().length);
+        assertEquals(expectedTokens.length, halsteadLengthCheck.getDefaultTokens().length, 
+                     "The length of expected tokens does not match the default tokens.");
         for (int i = 0; i < expectedTokens.length; i++) {
-            assertEquals(expectedTokens[i], halsteadLengthCheck.getDefaultTokens()[i]);
+            assertEquals(expectedTokens[i], halsteadLengthCheck.getDefaultTokens()[i],
+                         "Mismatch at token index " + i);
         }
     }
     

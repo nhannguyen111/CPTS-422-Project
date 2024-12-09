@@ -12,57 +12,62 @@ public class HalsteadVolumeCheck extends AbstractCheck {
     private int programLength = 0;  // Total occurrences of operators and operands (N)
     private Set<String> vocabulary = new HashSet<>();  // Unique operators and operands (n)
 
-    // Define operators and operands
-    private static final Set<String> OPERATORS = new HashSet<>();
-    private static final Set<String> OPERANDS = new HashSet<>();
+    private static final String[] OPERATORS = {
+            "+", "-", "*", "/", "=", ">", "<", "&&", "||", "==", "!=", 
+            "(", ")", ",", "[", "]", "if", ";", "for", "<=", ">=", "++", "--", "return", "{", "}"
+    };
 
+    private static final String[] OPERANDS = {
+            "int", "float", "double", "String", "boolean", "null"
+    };
+    
+    // Define operator and operand tokens as specified
+    private static final Set<String> OPERATORS_SET = new HashSet<>();
+    private static final Set<String> OPERANDS_SET = new HashSet<>();
+    
     static {
-        // Add common operators
-        OPERATORS.add("+");
-        OPERATORS.add("-");
-        OPERATORS.add("*");
-        OPERATORS.add("/");
-        OPERATORS.add("=");
-        OPERATORS.add(">");
-        OPERATORS.add("<");
-        OPERATORS.add("&&");
-        OPERATORS.add("||");
-        OPERATORS.add("==");
-        OPERATORS.add("!=");
-
-        // Add common operands (keywords, literals)
-        OPERANDS.add("int");
-        OPERANDS.add("float");
-        OPERANDS.add("double");
-        OPERANDS.add("String");
-        OPERANDS.add("boolean");
-        OPERANDS.add("null");
+        for (String operator : OPERATORS) {
+            OPERATORS_SET.add(operator);
+        }
+        for (String operand : OPERANDS) {
+            OPERANDS_SET.add(operand);
+        }
     }
 
     @Override
     public int[] getDefaultTokens() {
-        // Define tokens that represent identifiers and keywords
-        return new int[] {
-            TokenTypes.IDENT,           // For identifiers like variable names
-            TokenTypes.NUM_INT,         // Integer literals
-            TokenTypes.NUM_DOUBLE,      // Double literals
-            TokenTypes.STRING_LITERAL,  // String literals
-            TokenTypes.PLUS,            // Operator: +
-            TokenTypes.MINUS,           // Operator: -
-            TokenTypes.STAR,            // Operator: *
-            TokenTypes.DIV,             // Operator: /
-            TokenTypes.ASSIGN,          // Operator: =
-            TokenTypes.GT,              // Operator: >
-            TokenTypes.LT,              // Operator: <
-            TokenTypes.LAND,            // Operator: &&
-            TokenTypes.LOR,             // Operator: ||
-            TokenTypes.EQUAL,           // Operator: ==
-            TokenTypes.NOT_EQUAL,       // Operator: !=
-            TokenTypes.LITERAL_INT,     // Keyword: int
-            TokenTypes.LITERAL_FLOAT,   // Keyword: float
-            TokenTypes.LITERAL_DOUBLE,  // Keyword: double
-            TokenTypes.LITERAL_BOOLEAN, // Keyword: boolean
-            TokenTypes.LITERAL_NULL     // Keyword: null
+    	return new int[]{
+                TokenTypes.PLUS,
+                TokenTypes.MINUS,
+                TokenTypes.STAR,
+                TokenTypes.DIV,
+                TokenTypes.ASSIGN,
+                TokenTypes.GT,
+                TokenTypes.LT,
+                TokenTypes.BAND,
+                TokenTypes.BOR,
+                TokenTypes.EQUAL,
+                TokenTypes.NOT_EQUAL,
+                TokenTypes.LPAREN,
+                TokenTypes.RPAREN,
+                TokenTypes.COMMA,
+                // TokenTypes.LBRACK,		// Left Bracket doesn't exist apparently..
+                TokenTypes.RBRACK,
+                TokenTypes.LITERAL_IF,
+                TokenTypes.SEMI,
+                TokenTypes.LITERAL_FOR,
+                TokenTypes.LE,
+                TokenTypes.GE,
+                TokenTypes.INC,
+                TokenTypes.DEC,
+                TokenTypes.LITERAL_RETURN,
+                TokenTypes.LCURLY,
+                TokenTypes.RCURLY,
+                TokenTypes.LITERAL_INT,
+                TokenTypes.STRING_LITERAL,
+                TokenTypes.LITERAL_BOOLEAN,
+                TokenTypes.IDENT,
+                TokenTypes.NUM_INT
         };
     }
     
@@ -83,7 +88,7 @@ public class HalsteadVolumeCheck extends AbstractCheck {
         String tokenText = ast.getText();
 
         // Check if the token is an operator or operand based on the provided sets
-        if (OPERATORS.contains(tokenText) || OPERANDS.contains(tokenText)) {
+        if (OPERATORS_SET.contains(tokenText) || OPERANDS_SET.contains(tokenText)) {
             // Increment program length for each occurrence
             programLength++;
 

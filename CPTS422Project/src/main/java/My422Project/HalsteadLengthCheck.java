@@ -9,36 +9,33 @@ public class HalsteadLengthCheck extends AbstractCheck {
 
     private int numOperators = 0;
     private int numOperands = 0;
+    private int halsteadLength;
+    
+    private static final String[] OPERATORS = {
+            "+", "-", "*", "/", "=", ">", "<", "&&", "||", "==", "!=", 
+            "(", ")", ",", "[", "]", "if", ";", "for", "<=", ">=", "++", "--", "return", "{", "}"
+    };
 
-    private static final Set<String> OPERATORS = new HashSet<>();
-    private static final Set<String> OPERANDS = new HashSet<>();
+    private static final String[] OPERANDS = {
+            "int", "float", "double", "String", "boolean", "null"
+    };
 
+    // HashSet for quick lookup
+    private static final Set<String> OPERATORS_SET = new HashSet<>();
+    private static final Set<String> OPERANDS_SET = new HashSet<>();
+    
     static {
-        // Here are some common operators
-        OPERATORS.add("+");
-        OPERATORS.add("-");
-        OPERATORS.add("*");
-        OPERATORS.add("/");
-        OPERATORS.add("=");
-        OPERATORS.add(">");
-        OPERATORS.add("<");
-        OPERATORS.add("&&");
-        OPERATORS.add("||");
-        OPERATORS.add("==");
-        OPERATORS.add("!=");
-
-        // Here are some common operands (keywords, literals)
-        OPERANDS.add("int");
-        OPERANDS.add("float");
-        OPERANDS.add("double");
-        OPERANDS.add("String");
-        OPERANDS.add("boolean");
-        OPERANDS.add("null");
+        for (String operator : OPERATORS) {
+            OPERATORS_SET.add(operator);
+        }
+        for (String operand : OPERANDS) {
+            OPERANDS_SET.add(operand);
+        }
     }
-
+    
     @Override
     public int[] getDefaultTokens() {
-        return new int[] {
+        return new int[]{
                 TokenTypes.PLUS,
                 TokenTypes.MINUS,
                 TokenTypes.STAR,
@@ -50,6 +47,21 @@ public class HalsteadLengthCheck extends AbstractCheck {
                 TokenTypes.BOR,
                 TokenTypes.EQUAL,
                 TokenTypes.NOT_EQUAL,
+                TokenTypes.LPAREN,
+                TokenTypes.RPAREN,
+                TokenTypes.COMMA,
+                // TokenTypes.LBRACK,		// Left Bracket doesn't exist apparently..
+                TokenTypes.RBRACK,
+                TokenTypes.LITERAL_IF,
+                TokenTypes.SEMI,
+                TokenTypes.LITERAL_FOR,
+                TokenTypes.LE,
+                TokenTypes.GE,
+                TokenTypes.INC,
+                TokenTypes.DEC,
+                TokenTypes.LITERAL_RETURN,
+                TokenTypes.LCURLY,
+                TokenTypes.RCURLY,
                 TokenTypes.LITERAL_INT,
                 TokenTypes.STRING_LITERAL,
                 TokenTypes.LITERAL_BOOLEAN,
@@ -93,11 +105,11 @@ public class HalsteadLengthCheck extends AbstractCheck {
     }
 
     private boolean isOperator(DetailAST ast) {
-        return OPERATORS.contains(ast.getText());
+        return OPERATORS_SET.contains(ast.getText());
     }
 
     private boolean isOperand(DetailAST ast) {
-        return OPERANDS.contains(ast.getText()) ||
+        return OPERANDS_SET.contains(ast.getText()) ||
                 ast.getType() == TokenTypes.LITERAL_INT ||
                 ast.getType() == TokenTypes.STRING_LITERAL ||
                 ast.getType() == TokenTypes.LITERAL_BOOLEAN ||
@@ -112,6 +124,10 @@ public class HalsteadLengthCheck extends AbstractCheck {
 
     public int getNumOperands() {
         return numOperands;
+    }
+    // Getter for Halstead Length
+    public int getHalsteadLength() {
+        return halsteadLength;
     }
 
     // Setter for testing purposes

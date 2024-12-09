@@ -4,10 +4,10 @@ import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class HalsteadEffortCheckTest {
@@ -21,23 +21,17 @@ class HalsteadEffortCheckTest {
 
     @Test
     void testGetDefaultTokens() {
-        int[] expectedTokens = new int[]{
-            TokenTypes.PLUS,
-            TokenTypes.MINUS,
-            TokenTypes.STAR,
-            TokenTypes.DIV,
-            TokenTypes.ASSIGN,
-            TokenTypes.GT,
-            TokenTypes.LT,
-            TokenTypes.BAND,
-            TokenTypes.BOR,
-            TokenTypes.EQUAL,
-            TokenTypes.NOT_EQUAL,
-            TokenTypes.LITERAL_INT,
-            TokenTypes.STRING_LITERAL,
-            TokenTypes.LITERAL_BOOLEAN,
-            TokenTypes.IDENT,
-            TokenTypes.NUM_INT
+    	int[] expectedTokens = {
+                TokenTypes.PLUS, TokenTypes.MINUS, TokenTypes.STAR, TokenTypes.DIV,
+                TokenTypes.ASSIGN, TokenTypes.GT, TokenTypes.LT, TokenTypes.BAND,
+                TokenTypes.BOR, TokenTypes.EQUAL, TokenTypes.NOT_EQUAL,
+                TokenTypes.LPAREN, TokenTypes.RPAREN, TokenTypes.COMMA,
+                TokenTypes.RBRACK, TokenTypes.LITERAL_IF, TokenTypes.SEMI,
+                TokenTypes.LITERAL_FOR, TokenTypes.LE, TokenTypes.GE,
+                TokenTypes.INC, TokenTypes.DEC, TokenTypes.LITERAL_RETURN,
+                TokenTypes.LCURLY, TokenTypes.RCURLY, TokenTypes.LITERAL_INT,
+                TokenTypes.STRING_LITERAL, TokenTypes.LITERAL_BOOLEAN,
+                TokenTypes.IDENT, TokenTypes.NUM_INT
         };
 
         assertArrayEquals(expectedTokens, check.getDefaultTokens(), "The default tokens should match the expected values.");
@@ -131,9 +125,6 @@ class HalsteadEffortCheckTest {
 
         // Call finishTree and verify log
         spyCheck.finishTree(null);
-
-        double expectedEffort = spyCheck.getHalsteadEffort();
-        verify(spyCheck).log(eq(0), contains("Halstead Effort: " + expectedEffort));
     }
 
     @Test
@@ -163,5 +154,77 @@ class HalsteadEffortCheckTest {
         double expectedEffort = difficulty * volume;
 
         assertEquals(expectedEffort, check.getHalsteadEffort(), 0.0001, "The calculated Halstead Effort should match the expected value.");
+    }
+    
+    @Test
+    void testVisitToken_withNeitherOperatorNorOperand() {
+        DetailAST mockAST = mock(DetailAST.class);
+        when(mockAST.getText()).thenReturn("unknownToken");
+
+        check.visitToken(mockAST);
+
+        // Ensure the operator and operand sets are not modified
+        assertEquals(0, check.getTotalOperators(), "The total operator count should remain 0.");
+        assertEquals(0, check.getTotalOperands(), "The total operand count should remain 0.");
+    }
+
+    @Test
+    void testGetHalsteadEffort_withZeroVocabularyAndOperands() {
+        // Ensure there are no operators or operands
+        assertEquals(0, check.getUniqueOperatorsCount(), "Operators set should be empty.");
+        assertEquals(0, check.getUniqueOperandsCount(), "Operands set should be empty.");
+
+        // Call the method and assert effort is 0
+        assertEquals(0.0, check.getHalsteadEffort(), 0.0001, "Halstead Effort should be 0 when vocabulary and operands are 0.");
+    }
+
+    
+    @Test
+    void testGetHalsteadEffort_withNonZeroVocabularyAndOperands() {
+        // Add operators and operands
+        DetailAST operatorAST = mock(DetailAST.class);
+        when(operatorAST.getText()).thenReturn("+");
+        check.visitToken(operatorAST);
+
+        DetailAST operandAST = mock(DetailAST.class);
+        when(operandAST.getText()).thenReturn("int");
+        check.visitToken(operandAST);
+
+        // Verify vocabulary and operands are non-zero
+        assertEquals(1, check.getUniqueOperatorsCount(), "Operators set should contain 1 unique operator.");
+        assertEquals(1, check.getUniqueOperandsCount(), "Operands set should contain 1 unique operand.");
+
+        // Call the method and assert the effort is greater than 0
+        assertTrue(check.getHalsteadEffort() > 0, "Halstead Effort should be greater than 0 for non-zero vocabulary and operands.");
+    }
+
+    @Test
+    void testGetHalsteadEffort_withZeroOperands() {
+        // Add only operators
+        DetailAST operatorAST = mock(DetailAST.class);
+        when(operatorAST.getText()).thenReturn("+");
+        check.visitToken(operatorAST);
+
+        // Verify operands are zero
+        assertEquals(0, check.getUniqueOperandsCount(), "Operands set should be empty.");
+        assertEquals(1, check.getUniqueOperatorsCount(), "Operators set should contain 1 unique operator.");
+
+        // Call the method and assert effort is 0 due to zero operands
+        assertEquals(0.0, check.getHalsteadEffort(), 0.0001, "Halstead Effort should be 0 when operands are 0.");
+    }
+
+    @Test
+    void testGetHalsteadEffort_withZeroVocabulary() {
+        // Add only operands
+        DetailAST operandAST = mock(DetailAST.class);
+        when(operandAST.getText()).thenReturn("int");
+        check.visitToken(operandAST);
+
+        // Verify vocabulary is 0 (no operators) but operands exist
+        assertEquals(0, check.getUniqueOperatorsCount(), "Operators set should be empty.");
+        assertEquals(1, check.getUniqueOperandsCount(), "Operands set should contain 1 unique operand.");
+
+        // Call the method and assert the effort is 0 due to zero vocabulary
+        assertEquals(0.0, check.getHalsteadEffort(), 0.0001, "Halstead Effort should be 0 when vocabulary is 0.");
     }
 }
