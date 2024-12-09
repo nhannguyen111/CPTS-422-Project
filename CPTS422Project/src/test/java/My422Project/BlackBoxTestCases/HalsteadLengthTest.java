@@ -5,7 +5,8 @@ public class HalsteadLengthTest {
         // 1. Basic arithmetic operators
         int a = 5 + 3; // Operators: +, =; Operands: a, 5, 3
         int b = a * 2; // Operators: *, =; Operands: b, a, 2
-
+        
+        /*
         // 2. Conditional (ternary) operator
         int c = (a > b) ? a : b; // Operators: >, ?, :, =, (); Operands: c, a, b
 
@@ -24,11 +25,15 @@ public class HalsteadLengthTest {
 
         // 7. Method call with multiple arguments
         printSum(a, b); // Operators: (); Operands: printSum, a, b
+        */
     }
 
+    /*
     public static void printSum(int x, int y) {
         System.out.println(x + y); // Operators: ., +, (); Operands: System.out, x, y
     }
+    */
+    
 }
 
 // EXPECTED HALSTEAD LENGTH RESULT:

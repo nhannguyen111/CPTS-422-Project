@@ -49,7 +49,12 @@ public class HalsteadEffortBlackBoxTest {
 
     private void traverseTree(AbstractCheck check, DetailAST node) {
         while (node != null) {
-            check.visitToken(node);
+        	for (int token : check.getDefaultTokens()) {
+                if (node.getType() == token) {
+                    check.visitToken(node);
+                    break; // No need to continue checking once found
+                }
+            }
             traverseTree(check, node.getFirstChild());
             node = node.getNextSibling();
         }
